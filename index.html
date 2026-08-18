@@ -16,11 +16,13 @@
     src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
   ></script>
 
+
   <style>
 
     * {
       box-sizing: border-box;
     }
+
 
     body {
 
@@ -44,7 +46,7 @@
 
       width: 100%;
 
-      max-width: 600px;
+      max-width: 650px;
 
       margin: 0 auto;
 
@@ -57,14 +59,14 @@
 
       background: #ffffff;
 
-      border-radius: 14px;
+      border-radius: 16px;
 
-      padding: 20px;
+      padding: 28px 20px;
 
       margin-bottom: 18px;
 
       box-shadow:
-        0 4px 15px rgba(0,0,0,0.08);
+        0 4px 18px rgba(0,0,0,0.08);
 
       text-align: center;
 
@@ -73,13 +75,13 @@
 
     .logo {
 
-      width: 52px;
+      width: 64px;
 
-      height: 52px;
+      height: 64px;
 
-      margin: 0 auto 12px;
+      margin: 0 auto 14px;
 
-      border-radius: 10px;
+      border-radius: 12px;
 
       background: #0879b9;
 
@@ -91,7 +93,7 @@
 
       justify-content: center;
 
-      font-size: 20px;
+      font-size: 24px;
 
       font-weight: bold;
 
@@ -100,9 +102,9 @@
 
     h1 {
 
-      margin: 0 0 6px;
+      margin: 0 0 8px;
 
-      font-size: 24px;
+      font-size: 28px;
 
     }
 
@@ -113,7 +115,7 @@
 
       color: #657789;
 
-      font-size: 14px;
+      font-size: 15px;
 
     }
 
@@ -122,12 +124,12 @@
 
       background: #ffffff;
 
-      border-radius: 14px;
+      border-radius: 16px;
 
-      padding: 18px;
+      padding: 20px;
 
       box-shadow:
-        0 4px 15px rgba(0,0,0,0.08);
+        0 4px 18px rgba(0,0,0,0.08);
 
     }
 
@@ -136,13 +138,13 @@
 
       text-align: center;
 
-      font-size: 15px;
+      font-size: 16px;
 
       font-weight: bold;
 
       color: #0879b9;
 
-      margin-bottom: 15px;
+      margin-bottom: 16px;
 
     }
 
@@ -151,9 +153,11 @@
 
       width: 100%;
 
+      min-height: 360px;
+
       overflow: hidden;
 
-      border-radius: 12px;
+      border-radius: 14px;
 
       background: #101820;
 
@@ -166,7 +170,16 @@
 
       height: auto !important;
 
-      border-radius: 12px;
+      display: block;
+
+      border-radius: 14px;
+
+    }
+
+
+    #reader img {
+
+      max-width: 100%;
 
     }
 
@@ -175,11 +188,11 @@
 
       display: none;
 
-      margin-top: 18px;
+      margin-top: 20px;
 
-      padding: 18px;
+      padding: 20px;
 
-      border-radius: 12px;
+      border-radius: 14px;
 
       background: #eef8f1;
 
@@ -192,11 +205,11 @@
 
     .resultado-titulo {
 
-      font-size: 15px;
+      font-size: 18px;
 
       font-weight: bold;
 
-      margin-bottom: 8px;
+      margin-bottom: 12px;
 
       color: #23733b;
 
@@ -205,11 +218,13 @@
 
     .codigo {
 
-      font-size: 22px;
+      font-size: 25px;
 
       font-weight: bold;
 
       word-break: break-all;
+
+      margin-bottom: 10px;
 
     }
 
@@ -218,19 +233,19 @@
 
       width: 100%;
 
-      margin-top: 16px;
+      margin-top: 14px;
 
-      padding: 14px;
+      padding: 16px;
 
       border: none;
 
-      border-radius: 8px;
+      border-radius: 9px;
 
       background: #0879b9;
 
       color: white;
 
-      font-size: 14px;
+      font-size: 15px;
 
       font-weight: bold;
 
@@ -239,9 +254,11 @@
     }
 
 
-    .boton:hover {
+    .boton:disabled {
 
-      opacity: 0.92;
+      opacity: 0.6;
+
+      cursor: not-allowed;
 
     }
 
@@ -259,7 +276,7 @@
 
       padding: 14px;
 
-      border-radius: 8px;
+      border-radius: 9px;
 
       background: #fff0f0;
 
@@ -276,58 +293,15 @@
 
     .nota {
 
-      margin-top: 15px;
+      margin-top: 16px;
 
       text-align: center;
 
       color: #71808d;
 
-      font-size: 12px;
+      font-size: 13px;
 
       line-height: 1.5;
-
-    }
-
-
-    #reader__dashboard_section_swaplink {
-
-      display: none !important;
-
-    }
-
-
-    #reader__dashboard_section_csr {
-
-      display: none !important;
-
-    }
-
-
-    #reader__dashboard_section {
-
-      padding: 8px !important;
-
-    }
-
-
-    #reader__dashboard_section > div {
-
-      margin: 0 auto !important;
-
-    }
-
-
-    #reader button {
-
-      border: none;
-
-      border-radius: 7px;
-
-      padding: 10px 14px;
-
-      font-weight: bold;
-
-      cursor: pointer;
 
     }
 
@@ -340,13 +314,36 @@
 
       }
 
+
       .panel {
 
         padding: 12px;
 
       }
 
+
+      .encabezado {
+
+        padding: 22px 15px;
+
+      }
+
+
       h1 {
+
+        font-size: 24px;
+
+      }
+
+
+      #reader {
+
+        min-height: 300px;
+
+      }
+
+
+      .codigo {
 
         font-size: 21px;
 
@@ -365,15 +362,21 @@
   <main class="contenedor">
 
 
+    <!-- =====================================
+         ENCABEZADO
+    ====================================== -->
+
     <section class="encabezado">
 
       <div class="logo">
         CR
       </div>
 
+
       <h1>
         Lector QR
       </h1>
+
 
       <p class="descripcion">
         Control de Planeación - Planta
@@ -381,6 +384,10 @@
 
     </section>
 
+
+    <!-- =====================================
+         LECTOR
+    ====================================== -->
 
     <section class="panel">
 
@@ -396,20 +403,27 @@
       <div id="reader"></div>
 
 
+      <!-- ===================================
+           RESULTADO DEL QR
+      ==================================== -->
+
       <div
         id="resultado"
         class="resultado"
       >
 
         <div class="resultado-titulo">
+
           ✓ QR DETECTADO
+
         </div>
+
 
         <div
           id="codigoDetectado"
           class="codigo"
-        >
-        </div>
+        ></div>
+
 
         <button
           id="btnContinuar"
@@ -417,19 +431,29 @@
           type="button"
           onclick="continuar()"
         >
+
           CONTINUAR
+
         </button>
 
+
         <button
+          id="btnOtro"
           class="boton boton-secundario"
           type="button"
           onclick="reiniciarEscaner()"
         >
+
           ESCANEAR OTRO
+
         </button>
 
       </div>
 
+
+      <!-- ===================================
+           ERROR
+      ==================================== -->
 
       <div
         id="error"
@@ -453,18 +477,68 @@
 
   <script>
 
+
+    /* =====================================================
+       CONFIGURACIÓN
+    ===================================================== */
+
+
+    /*
+     * ESTA ES LA URL CORRECTA DEL PROYECTO
+     * DE CONTROL DE PLANEACIÓN.
+     */
+
+    const URL_APPS_SCRIPT =
+      'https://script.google.com/macros/s/AKfycbwwFlzKNGbb5fxUecckgft3kiP56kV5hBFqEwJthGIoUQevs0Pc19hUSBkArKFzUxBosQ/exec';
+
+
+    /*
+     * Lector QR.
+     */
+
     let scanner = null;
 
+
+    /*
+     * Código detectado.
+     */
+
     let codigoDetectado = '';
+
+
+    /*
+     * Evita que el mismo QR
+     * se detecte varias veces.
+     */
 
     let escaneoRealizado = false;
 
 
+    /*
+     * Evita iniciar dos cámaras
+     * al mismo tiempo.
+     */
+
+    let iniciandoCamara = false;
+
+
+    /* =====================================================
+       FUNCIONES DE INTERFAZ
+    ===================================================== */
+
+
     function actualizarEstado(texto) {
 
-      document.getElementById(
-        'estado'
-      ).textContent = texto;
+      const elemento =
+        document.getElementById('estado');
+
+
+      if (elemento) {
+
+        elemento.textContent =
+          texto;
+
+      }
 
     }
 
@@ -474,23 +548,53 @@
       const elemento =
         document.getElementById('error');
 
-      elemento.textContent = texto;
 
-      elemento.style.display = 'block';
+      elemento.textContent =
+        texto;
+
+
+      elemento.style.display =
+        'block';
 
     }
 
 
     function ocultarError() {
 
-      document.getElementById(
-        'error'
-      ).style.display = 'none';
+      const elemento =
+        document.getElementById('error');
 
-    }
+
+      elemento.style.display =
+        'none';
+
+  }
+
+
+    /* =====================================================
+       INICIAR ESCÁNER
+    ===================================================== */
 
 
     function iniciarEscaner() {
+
+
+      if (iniciandoCamara) {
+
+        return;
+
+      }
+
+
+      if (scanner) {
+
+        return;
+
+      }
+
+
+      iniciandoCamara = true;
+
 
       ocultarError();
 
@@ -500,4 +604,552 @@
       );
 
 
-     
+      /*
+       * Creamos un lector nuevo.
+       */
+
+      try {
+
+        scanner =
+          new Html5Qrcode(
+            'reader'
+          );
+
+      } catch (error) {
+
+        scanner = null;
+
+        iniciandoCamara = false;
+
+        console.error(error);
+
+        mostrarError(
+          'No se pudo iniciar el lector QR.'
+        );
+
+        actualizarEstado(
+          'Error al iniciar lector.'
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * Configuración del lector.
+       */
+
+      const configuracion = {
+
+        fps: 10,
+
+
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+          const tamaño =
+            Math.floor(
+              Math.min(
+                viewfinderWidth,
+                viewfinderHeight
+              ) * 0.70
+            );
+
+
+          return {
+
+            width: tamaño,
+
+            height: tamaño
+
+          };
+
+        },
+
+
+        aspectRatio: 1.0,
+
+
+        formatsToSupport: [
+
+          Html5QrcodeSupportedFormats.QR_CODE
+
+        ]
+
+      };
+
+
+      /*
+       * Iniciar cámara trasera.
+       */
+
+      scanner
+        .start(
+
+          {
+            facingMode: {
+              exact: 'environment'
+            }
+          },
+
+          configuracion,
+
+          cuandoDetectaQR,
+
+          cuandoNoDetectaQR
+
+        )
+
+
+        .then(function() {
+
+          iniciandoCamara = false;
+
+
+          actualizarEstado(
+            'Buscando código QR...'
+          );
+
+        })
+
+
+        .catch(function(error) {
+
+          console.warn(
+            'No se pudo iniciar con cámara trasera exacta:',
+            error
+          );
+
+
+          /*
+           * Algunos teléfonos no permiten
+           * "exact: environment".
+           *
+           * Intentamos nuevamente
+           * usando simplemente environment.
+           */
+
+          if (scanner) {
+
+            scanner
+              .clear()
+              .catch(function() {});
+
+          }
+
+
+          scanner = null;
+
+
+          scanner =
+            new Html5Qrcode(
+              'reader'
+            );
+
+
+          scanner
+            .start(
+
+              {
+                facingMode: 'environment'
+              },
+
+              configuracion,
+
+              cuandoDetectaQR,
+
+              cuandoNoDetectaQR
+
+            )
+
+
+            .then(function() {
+
+              iniciandoCamara = false;
+
+
+              actualizarEstado(
+                'Buscando código QR...'
+              );
+
+            })
+
+
+            .catch(function(errorFinal) {
+
+              iniciandoCamara = false;
+
+              console.error(
+                errorFinal
+              );
+
+
+              scanner = null;
+
+
+              actualizarEstado(
+                'No se pudo iniciar la cámara.'
+              );
+
+
+              mostrarError(
+                'No se pudo acceder a la cámara. ' +
+                'Verifique que el navegador tenga ' +
+                'permiso para utilizar la cámara.'
+              );
+
+            });
+
+        });
+
+    }
+
+
+    /* =====================================================
+       QR DETECTADO
+    ===================================================== */
+
+
+    function cuandoDetectaQR(
+      texto,
+      resultado
+    ) {
+
+
+      if (escaneoRealizado) {
+
+        return;
+
+      }
+
+
+      const codigo =
+        String(
+          texto || ''
+        ).trim();
+
+
+      if (!codigo) {
+
+        return;
+
+      }
+
+
+      /*
+       * Marcamos inmediatamente
+       * para evitar múltiples lecturas.
+       */
+
+      escaneoRealizado = true;
+
+
+      codigoDetectado =
+        codigo;
+
+
+      actualizarEstado(
+        'QR detectado correctamente.'
+      );
+
+
+      /*
+       * Mostrar código.
+       */
+
+      document.getElementById(
+        'codigoDetectado'
+      ).textContent =
+        codigoDetectado;
+
+
+      /*
+       * Mostrar resultado.
+       */
+
+      document.getElementById(
+        'resultado'
+      ).style.display =
+        'block';
+
+
+      /*
+       * Detener cámara.
+       */
+
+      detenerEscaner();
+
+    }
+
+
+    function cuandoNoDetectaQR(error) {
+
+      /*
+       * No hacemos nada.
+       *
+       * El lector continúa buscando
+       * automáticamente.
+       */
+
+    }
+
+
+    /* =====================================================
+       DETENER ESCÁNER
+    ===================================================== */
+
+
+    function detenerEscaner() {
+
+
+      if (!scanner) {
+
+        return Promise.resolve();
+
+      }
+
+
+      const lector =
+        scanner;
+
+
+      scanner = null;
+
+
+      return lector
+        .stop()
+
+        .then(function() {
+
+          try {
+
+            lector.clear();
+
+          } catch (error) {
+
+          }
+
+        })
+
+        .catch(function(error) {
+
+          console.warn(
+            'Error al detener lector:',
+            error
+          );
+
+
+          try {
+
+            lector.clear();
+
+          } catch (e) {
+
+          }
+
+        });
+
+    }
+
+
+    /* =====================================================
+       ESCANEAR OTRO
+    ===================================================== */
+
+
+    function reiniciarEscaner() {
+
+
+      /*
+       * Ocultar resultado.
+       */
+
+      document.getElementById(
+        'resultado'
+      ).style.display =
+        'none';
+
+
+      /*
+       * Limpiar código.
+       */
+
+      document.getElementById(
+        'codigoDetectado'
+      ).textContent =
+        '';
+
+
+      codigoDetectado =
+        '';
+
+
+      escaneoRealizado =
+        false;
+
+
+      ocultarError();
+
+
+      /*
+       * Limpiar lector.
+       */
+
+      if (scanner) {
+
+        detenerEscaner()
+          .then(function() {
+
+            iniciarEscaner();
+
+          });
+
+      } else {
+
+        iniciarEscaner();
+
+      }
+
+    }
+
+
+    /* =====================================================
+       CONTINUAR
+    ===================================================== */
+
+
+    function continuar() {
+
+
+      if (!codigoDetectado) {
+
+        return;
+
+      }
+
+
+      const boton =
+        document.getElementById(
+          'btnContinuar'
+        );
+
+
+      const botonOtro =
+        document.getElementById(
+          'btnOtro'
+        );
+
+
+      /*
+       * Evitar doble clic.
+       */
+
+      boton.disabled =
+        true;
+
+
+      boton.textContent =
+        'ABRIENDO...';
+
+
+      botonOtro.disabled =
+        true;
+
+
+      /*
+       * Codificamos el QR para
+       * enviarlo como parámetro.
+       */
+
+      const codigo =
+        encodeURIComponent(
+          codigoDetectado
+        );
+
+
+      /*
+       * ESTA ES LA PARTE IMPORTANTE.
+       *
+       * Abrimos el Apps Script CORRECTO
+       * y enviamos:
+       *
+       * ?codigoQR=XXXXXXXX
+       */
+
+      const destino =
+        URL_APPS_SCRIPT +
+        '?codigoQR=' +
+        codigo;
+
+
+      /*
+       * Redirigir al sistema.
+       */
+
+      window.location.href =
+        destino;
+
+    }
+
+
+    /* =====================================================
+       INICIO AUTOMÁTICO
+    ===================================================== */
+
+
+    window.addEventListener(
+      'load',
+      function() {
+
+        /*
+         * Pequeño retraso para asegurar
+         * que el navegador terminó de cargar
+         * el lector.
+         */
+
+        setTimeout(
+          function() {
+
+            iniciarEscaner();
+
+          },
+          300
+        );
+
+      }
+    );
+
+
+    /* =====================================================
+       CERRAR AL SALIR
+    ===================================================== */
+
+
+    window.addEventListener(
+      'beforeunload',
+      function() {
+
+        if (scanner) {
+
+          scanner
+            .stop()
+
+            .catch(
+              function() {}
+            );
+
+        }
+
+      }
+    );
+
+
+  </script>
+
+
+</body>
+
+</html>
