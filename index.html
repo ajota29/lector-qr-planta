@@ -12,6 +12,11 @@
 
   <title>Lector QR - Planta</title>
 
+
+  <!-- =========================================
+       LIBRERÍA LECTOR QR
+  ========================================== -->
+
   <script
     src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
   ></script>
@@ -42,6 +47,10 @@
     }
 
 
+    /* =========================================
+       CONTENEDOR
+    ========================================== */
+
     .contenedor {
 
       width: 100%;
@@ -54,6 +63,10 @@
 
     }
 
+
+    /* =========================================
+       ENCABEZADO
+    ========================================== */
 
     .encabezado {
 
@@ -120,6 +133,10 @@
     }
 
 
+    /* =========================================
+       PANEL
+    ========================================== */
+
     .panel {
 
       background: #ffffff;
@@ -133,6 +150,10 @@
 
     }
 
+
+    /* =========================================
+       ESTADO
+    ========================================== */
 
     .estado {
 
@@ -148,6 +169,10 @@
 
     }
 
+
+    /* =========================================
+       LECTOR
+    ========================================== */
 
     #reader {
 
@@ -183,6 +208,10 @@
 
     }
 
+
+    /* =========================================
+       RESULTADO
+    ========================================== */
 
     .resultado {
 
@@ -229,6 +258,10 @@
     }
 
 
+    /* =========================================
+       BOTONES
+    ========================================== */
+
     .boton {
 
       width: 100%;
@@ -270,6 +303,10 @@
     }
 
 
+    /* =========================================
+       ERROR
+    ========================================== */
+
     .error {
 
       margin-top: 15px;
@@ -291,6 +328,10 @@
     }
 
 
+    /* =========================================
+       NOTA
+    ========================================== */
+
     .nota {
 
       margin-top: 16px;
@@ -305,6 +346,10 @@
 
     }
 
+
+    /* =========================================
+       CELULARES
+    ========================================== */
 
     @media (max-width: 480px) {
 
@@ -412,6 +457,7 @@
         class="resultado"
       >
 
+
         <div class="resultado-titulo">
 
           ✓ QR DETECTADO
@@ -448,6 +494,7 @@
 
         </button>
 
+
       </div>
 
 
@@ -475,6 +522,7 @@
   </main>
 
 
+
   <script>
 
 
@@ -484,7 +532,7 @@
 
 
     /*
-     * ESTA ES LA URL CORRECTA DEL PROYECTO
+     * URL DEL PROYECTO CORRECTO
      * DE CONTROL DE PLANEACIÓN.
      */
 
@@ -507,8 +555,7 @@
 
 
     /*
-     * Evita que el mismo QR
-     * se detecte varias veces.
+     * Evita lecturas múltiples.
      */
 
     let escaneoRealizado = false;
@@ -516,10 +563,11 @@
 
     /*
      * Evita iniciar dos cámaras
-     * al mismo tiempo.
+     * simultáneamente.
      */
 
     let iniciandoCamara = false;
+
 
 
     /* =====================================================
@@ -530,7 +578,9 @@
     function actualizarEstado(texto) {
 
       const elemento =
-        document.getElementById('estado');
+        document.getElementById(
+          'estado'
+        );
 
 
       if (elemento) {
@@ -543,10 +593,13 @@
     }
 
 
+
     function mostrarError(texto) {
 
       const elemento =
-        document.getElementById('error');
+        document.getElementById(
+          'error'
+        );
 
 
       elemento.textContent =
@@ -559,16 +612,20 @@
     }
 
 
+
     function ocultarError() {
 
       const elemento =
-        document.getElementById('error');
+        document.getElementById(
+          'error'
+        );
 
 
       elemento.style.display =
         'none';
 
-  }
+    }
+
 
 
     /* =====================================================
@@ -605,7 +662,7 @@
 
 
       /*
-       * Creamos un lector nuevo.
+       * Crear lector.
        */
 
       try {
@@ -623,22 +680,26 @@
 
         console.error(error);
 
+
         mostrarError(
           'No se pudo iniciar el lector QR.'
         );
 
+
         actualizarEstado(
           'Error al iniciar lector.'
         );
+
 
         return;
 
       }
 
 
-      /*
-       * Configuración del lector.
-       */
+
+      /* =================================================
+         CONFIGURACIÓN
+      ================================================= */
 
       const configuracion = {
 
@@ -649,6 +710,7 @@
           viewfinderWidth,
           viewfinderHeight
         ) {
+
 
           const tamaño =
             Math.floor(
@@ -682,9 +744,11 @@
       };
 
 
-      /*
-       * Iniciar cámara trasera.
-       */
+
+      /* =================================================
+         PRIMER INTENTO
+         CÁMARA TRASERA
+      ================================================= */
 
       scanner
         .start(
@@ -718,6 +782,7 @@
 
         .catch(function(error) {
 
+
           console.warn(
             'No se pudo iniciar con cámara trasera exacta:',
             error
@@ -728,8 +793,8 @@
            * Algunos teléfonos no permiten
            * "exact: environment".
            *
-           * Intentamos nuevamente
-           * usando simplemente environment.
+           * Segundo intento:
+           * simplemente environment.
            */
 
           if (scanner) {
@@ -782,6 +847,7 @@
 
               iniciandoCamara = false;
 
+
               console.error(
                 errorFinal
               );
@@ -806,6 +872,7 @@
         });
 
     }
+
 
 
     /* =====================================================
@@ -840,8 +907,10 @@
 
 
       /*
-       * Marcamos inmediatamente
-       * para evitar múltiples lecturas.
+       * Marcar inmediatamente.
+       *
+       * Evita que el mismo QR
+       * se procese varias veces.
        */
 
       escaneoRealizado = true;
@@ -857,7 +926,7 @@
 
 
       /*
-       * Mostrar código.
+       * Mostrar código detectado.
        */
 
       document.getElementById(
@@ -885,6 +954,7 @@
     }
 
 
+
     function cuandoNoDetectaQR(error) {
 
       /*
@@ -895,6 +965,7 @@
        */
 
     }
+
 
 
     /* =====================================================
@@ -922,7 +993,9 @@
       return lector
         .stop()
 
+
         .then(function() {
+
 
           try {
 
@@ -934,7 +1007,9 @@
 
         })
 
+
         .catch(function(error) {
+
 
           console.warn(
             'Error al detener lector:',
@@ -953,6 +1028,7 @@
         });
 
     }
+
 
 
     /* =====================================================
@@ -1016,6 +1092,7 @@
     }
 
 
+
     /* =====================================================
        CONTINUAR
     ===================================================== */
@@ -1023,6 +1100,10 @@
 
     function continuar() {
 
+
+      /*
+       * Verificar que exista QR.
+       */
 
       if (!codigoDetectado) {
 
@@ -1059,10 +1140,10 @@
         true;
 
 
-      /*
-       * Codificamos el QR para
-       * enviarlo como parámetro.
-       */
+
+      /* =================================================
+         CODIFICAR QR
+      ================================================= */
 
       const codigo =
         encodeURIComponent(
@@ -1070,14 +1151,16 @@
         );
 
 
-      /*
-       * ESTA ES LA PARTE IMPORTANTE.
-       *
-       * Abrimos el Apps Script CORRECTO
-       * y enviamos:
-       *
-       * ?codigoQR=XXXXXXXX
-       */
+
+      /* =================================================
+         CONSTRUIR URL
+      =================================================
+
+         Apps Script recibirá:
+
+         ?codigoQR=00115COL220-02
+
+      ================================================= */
 
       const destino =
         URL_APPS_SCRIPT +
@@ -1085,14 +1168,29 @@
         codigo;
 
 
-      /*
-       * Redirigir al sistema.
-       */
+
+      console.log(
+        'QR detectado:',
+        codigoDetectado
+      );
+
+
+      console.log(
+        'Destino:',
+        destino
+      );
+
+
+
+      /* =================================================
+         REDIRECCIÓN
+      ================================================= */
 
       window.location.href =
         destino;
 
     }
+
 
 
     /* =====================================================
@@ -1104,10 +1202,11 @@
       'load',
       function() {
 
+
         /*
          * Pequeño retraso para asegurar
-         * que el navegador terminó de cargar
-         * el lector.
+         * que la librería del lector
+         * terminó de cargar.
          */
 
         setTimeout(
@@ -1123,6 +1222,7 @@
     );
 
 
+
     /* =====================================================
        CERRAR AL SALIR
     ===================================================== */
@@ -1131,6 +1231,7 @@
     window.addEventListener(
       'beforeunload',
       function() {
+
 
         if (scanner) {
 
