@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Lector QR - Planta</title>
+
+  <script
+    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
+  ></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+
+      margin: 0;
+
+      min-height: 100vh;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background: #f3f6f8;
+
+      color: #17212b;
+
+    }
+
+
+    .contenedor {
+
+      width: 100%;
+
+      max-width: 600px;
+
+      margin: 0 auto;
+
+      padding: 20px;
+
+    }
+
+
+    .encabezado {
+
+      background: #ffffff;
+
+      border-radius: 14px;
+
+      padding: 20px;
+
+      margin-bottom: 18px;
+
+      box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+
+      text-align: center;
+
+    }
+
+
+    .logo {
+
+      width: 52px;
+
+      height: 52px;
+
+      margin: 0 auto 12px;
+
+      border-radius: 10px;
+
+      background: #0879b9;
+
+      color: #ffffff;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      font-size: 20px;
+
+      font-weight: bold;
+
+    }
+
+
+    h1 {
+
+      margin: 0 0 6px;
+
+      font-size: 24px;
+
+    }
+
+
+    .descripcion {
+
+      margin: 0;
+
+      color: #657789;
+
+      font-size: 14px;
+
+    }
+
+
+    .panel {
+
+      background: #ffffff;
+
+      border-radius: 14px;
+
+      padding: 18px;
+
+      box-shadow:
+        0 4px 15px rgba(0,0,0,0.08);
+
+    }
+
+
+    .estado {
+
+      text-align: center;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      color: #0879b9;
+
+      margin-bottom: 15px;
+
+    }
+
+
+    #reader {
+
+      width: 100%;
+
+      overflow: hidden;
+
+      border-radius: 12px;
+
+      background: #101820;
+
+    }
+
+
+    #reader video {
+
+      width: 100% !important;
+
+      height: auto !important;
+
+      border-radius: 12px;
+
+    }
+
+
+    .resultado {
+
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 18px;
+
+      border-radius: 12px;
+
+      background: #eef8f1;
+
+      border: 1px solid #b8dec3;
+
+      text-align: center;
+
+    }
+
+
+    .resultado-titulo {
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      margin-bottom: 8px;
+
+      color: #23733b;
+
+    }
+
+
+    .codigo {
+
+      font-size: 22px;
+
+      font-weight: bold;
+
+      word-break: break-all;
+
+    }
+
+
+    .boton {
+
+      width: 100%;
+
+      margin-top: 16px;
+
+      padding: 14px;
+
+      border: none;
+
+      border-radius: 8px;
+
+      background: #0879b9;
+
+      color: white;
+
+      font-size: 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+
+    .boton:hover {
+
+      opacity: 0.92;
+
+    }
+
+
+    .boton-secundario {
+
+      background: #17212b;
+
+    }
+
+
+    .error {
+
+      margin-top: 15px;
+
+      padding: 14px;
+
+      border-radius: 8px;
+
+      background: #fff0f0;
+
+      color: #a12a2a;
+
+      font-size: 14px;
+
+      text-align: center;
+
+      display: none;
+
+    }
+
+
+    .nota {
+
+      margin-top: 15px;
+
+      text-align: center;
+
+      color: #71808d;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+
+    }
+
+
+    #reader__dashboard_section_swaplink {
+
+      display: none !important;
+
+    }
+
+
+    #reader__dashboard_section_csr {
+
+      display: none !important;
+
+    }
+
+
+    #reader__dashboard_section {
+
+      padding: 8px !important;
+
+    }
+
+
+    #reader__dashboard_section > div {
+
+      margin: 0 auto !important;
+
+    }
+
+
+    #reader button {
+
+      border: none;
+
+      border-radius: 7px;
+
+      padding: 10px 14px;
+
+      font-weight: bold;
+
+      cursor: pointer;
+
+    }
+
+
+    @media (max-width: 480px) {
+
+      .contenedor {
+
+        padding: 12px;
+
+      }
+
+      .panel {
+
+        padding: 12px;
+
+      }
+
+      h1 {
+
+        font-size: 21px;
+
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <main class="contenedor">
+
+
+    <section class="encabezado">
+
+      <div class="logo">
+        CR
+      </div>
+
+      <h1>
+        Lector QR
+      </h1>
+
+      <p class="descripcion">
+        Control de Planeación - Planta
+      </p>
+
+    </section>
+
+
+    <section class="panel">
+
+
+      <div
+        id="estado"
+        class="estado"
+      >
+        Iniciando cámara...
+      </div>
+
+
+      <div id="reader"></div>
+
+
+      <div
+        id="resultado"
+        class="resultado"
+      >
+
+        <div class="resultado-titulo">
+          ✓ QR DETECTADO
+        </div>
+
+        <div
+          id="codigoDetectado"
+          class="codigo"
+        >
+        </div>
+
+        <button
+          id="btnContinuar"
+          class="boton"
+          type="button"
+          onclick="continuar()"
+        >
+          CONTINUAR
+        </button>
+
+        <button
+          class="boton boton-secundario"
+          type="button"
+          onclick="reiniciarEscaner()"
+        >
+          ESCANEAR OTRO
+        </button>
+
+      </div>
+
+
+      <div
+        id="error"
+        class="error"
+      ></div>
+
+
+      <p class="nota">
+
+        Apunte la cámara directamente hacia el
+        código QR. No necesita tomar fotografías.
+
+      </p>
+
+
+    </section>
+
+
+  </main>
+
+
+  <script>
+
+    let scanner = null;
+
+    let codigoDetectado = '';
+
+    let escaneoRealizado = false;
+
+
+    function actualizarEstado(texto) {
+
+      document.getElementById(
+        'estado'
+      ).textContent = texto;
+
+    }
+
+
+    function mostrarError(texto) {
+
+      const elemento =
+        document.getElementById('error');
+
+      elemento.textContent = texto;
+
+      elemento.style.display = 'block';
+
+    }
+
+
+    function ocultarError() {
+
+      document.getElementById(
+        'error'
+      ).style.display = 'none';
+
+    }
+
+
+    function iniciarEscaner() {
+
+      ocultarError();
+
+
+      actualizarEstado(
+        'Solicitando acceso a la cámara...'
+      );
+
+
+      scanner =
+        new Html5Qrcode('reader');
+
+
+      const configuracion = {
+
+        fps: 10,
+
+        qrbox: function(
+          viewfinderWidth,
+          viewfinderHeight
+        ) {
+
+          const tamaño =
+            Math.min(
+              viewfinderWidth,
+              viewfinderHeight
+            ) * 0.70;
+
+          return {
+
+            width: tamaño,
+
+            height: tamaño
+
+          };
+
+        },
+
+        aspectRatio: 1.0,
+
+        formatsToSupport: [
+          Html5QrcodeSupportedFormats.QR_CODE
+        ]
+
+      };
+
+
+      scanner
+        .start(
+
+          {
+            facingMode: 'environment'
+          },
+
+          configuracion,
+
+          cuandoDetectaQR,
+
+          cuandoNoDetectaQR
+
+        )
+
+        .then(function() {
+
+          actualizarEstado(
+            'Buscando código QR...'
+          );
+
+        })
+
+        .catch(function(error) {
+
+          console.error(error);
+
+          actualizarEstado(
+            'No se pudo iniciar la cámara.'
+          );
+
+
+          mostrarError(
+            'No se pudo acceder a la cámara. ' +
+            'Verifique que el navegador tenga ' +
+            'permiso para utilizar la cámara.'
+          );
+
+        });
+
+    }
+
+
+    function cuandoDetectaQR(
+      texto,
+      resultado
+    ) {
+
+      if (escaneoRealizado) {
+
+        return;
+
+      }
+
+
+      escaneoRealizado = true;
+
+      codigoDetectado =
+        String(texto || '').trim();
+
+
+      if (!codigoDetectado) {
+
+        escaneoRealizado = false;
+
+        return;
+
+      }
+
+
+      actualizarEstado(
+        'QR detectado correctamente.'
+      );
+
+
+      document.getElementById(
+        'codigoDetectado'
+      ).textContent =
+        codigoDetectado;
+
+
+      document.getElementById(
+        'resultado'
+      ).style.display = 'block';
+
+
+      detenerEscaner();
+
+    }
+
+
+    function cuandoNoDetectaQR(error) {
+
+      // El lector continúa buscando automáticamente.
+
+    }
+
+
+    function detenerEscaner() {
+
+      if (!scanner) {
+
+        return Promise.resolve();
+
+      }
+
+
+      return scanner
+        .stop()
+        .then(function() {
+
+          scanner.clear();
+
+          scanner = null;
+
+        })
+        .catch(function(error) {
+
+          console.warn(
+            'Error al detener lector:',
+            error
+          );
+
+        });
+
+    }
+
+
+    function reiniciarEscaner() {
+
+      document.getElementById(
+        'resultado'
+      ).style.display = 'none';
+
+
+      document.getElementById(
+        'codigoDetectado'
+      ).textContent = '';
+
+
+      codigoDetectado = '';
+
+      escaneoRealizado = false;
+
+
+      if (scanner) {
+
+        detenerEscaner()
+          .then(function() {
+
+            iniciarEscaner();
+
+          });
+
+      } else {
+
+        iniciarEscaner();
+
+      }
+
+    }
+
+
+    function continuar() {
+
+      if (!codigoDetectado) {
+
+        return;
+
+      }
+
+
+      alert(
+        'Código detectado:\\n\\n' +
+        codigoDetectado
+      );
+
+    }
+
+
+    window.addEventListener(
+      'load',
+      function() {
+
+        iniciarEscaner();
+
+      }
+    );
+
+
+    window.addEventListener(
+      'beforeunload',
+      function() {
+
+        if (scanner) {
+
+          scanner
+            .stop()
+            .catch(function() {});
+
+        }
+
+      }
+    );
+
+  </script>
+
+
+</body>
+
+</html>
