@@ -703,19 +703,89 @@
 
     function continuar() {
 
-      if (!codigoDetectado) {
-
-        return;
-
-      }
+  if (!codigoDetectado) {
+    return;
+  }
 
 
-      alert(
-        'Código detectado:\\n\\n' +
+  /*
+   * URL DE GOOGLE APPS SCRIPT
+   *
+   * IMPORTANTE:
+   * coloca aquí la URL /exec de tu aplicación
+   * de Google Apps Script.
+   */
+
+  const URL_APPS_SCRIPT =
+    'AQUI_VA_TU_URL_DE_APPS_SCRIPT';
+
+
+  /*
+   * Enviamos el código QR como parámetro.
+   *
+   * Ejemplo:
+   *
+   * ?qr=00115COL220-02
+   */
+
+  const url =
+    URL_APPS_SCRIPT +
+    '?qr=' +
+    encodeURIComponent(
+      codigoDetectado
+    );
+
+
+  /*
+   * Abrimos la aplicación de
+   * Google Apps Script.
+   */
+
+  window.location.href = url;
+
+  }function continuar() {
+  
+    if (!codigoDetectado) {
+      return;
+    }
+  
+  
+    /*
+     * URL DE GOOGLE APPS SCRIPT
+     *
+     * IMPORTANTE:
+     * coloca aquí la URL /exec de tu aplicación
+     * de Google Apps Script.
+     */
+  
+    const URL_APPS_SCRIPT =
+      'AQUI_VA_TU_URL_DE_APPS_SCRIPT';
+  
+  
+    /*
+     * Enviamos el código QR como parámetro.
+     *
+     * Ejemplo:
+     *
+     * ?qr=00115COL220-02
+     */
+  
+    const url =
+      URL_APPS_SCRIPT +
+      '?qr=' +
+      encodeURIComponent(
         codigoDetectado
       );
-
-    }
+  
+  
+    /*
+     * Abrimos la aplicación de
+     * Google Apps Script.
+     */
+  
+    window.location.href = url;
+  
+  }
 
 
     window.addEventListener(
