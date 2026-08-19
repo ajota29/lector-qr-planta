@@ -18,8 +18,8 @@
   ========================================== -->
 
   <script
-    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
-  ></script>
+    src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+  </script>
 
 
   <style>
@@ -457,7 +457,6 @@
         class="resultado"
       >
 
-
         <div class="resultado-titulo">
 
           ✓ QR DETECTADO
@@ -531,101 +530,80 @@
     ===================================================== */
 
 
-    /*
-     * URL DEL PROYECTO CORRECTO
-     * DE CONTROL DE PLANEACIÓN.
-     */
-
     const URL_APPS_SCRIPT =
       'https://script.google.com/macros/s/AKfycbwwFlzKNGbb5fxUecckgft3kiP56kV5hBFqEwJthGIoUQevs0Pc19hUSBkArKFzUxBosQ/exec';
 
 
-    /*
-     * Lector QR.
-     */
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+
 
     let scanner = null;
 
-
-    /*
-     * Código detectado.
-     */
-
     let codigoDetectado = '';
-
-
-    /*
-     * Evita lecturas múltiples.
-     */
 
     let escaneoRealizado = false;
 
-
-    /*
-     * Evita iniciar dos cámaras
-     * simultáneamente.
-     */
-
     let iniciandoCamara = false;
 
+    let deteniendoCamara = null;
 
 
     /* =====================================================
-       FUNCIONES DE INTERFAZ
+       INTERFAZ
     ===================================================== */
 
 
     function actualizarEstado(texto) {
 
       const elemento =
-        document.getElementById(
-          'estado'
-        );
+        document.getElementById('estado');
 
 
       if (elemento) {
 
-        elemento.textContent =
-          texto;
+        elemento.textContent = texto;
 
       }
 
     }
 
 
-
     function mostrarError(texto) {
 
       const elemento =
-        document.getElementById(
-          'error'
-        );
+        document.getElementById('error');
 
 
-      elemento.textContent =
-        texto;
+      if (!elemento) {
+        return;
+      }
 
 
-      elemento.style.display =
-        'block';
+      elemento.textContent = texto;
+
+      elemento.style.display = 'block';
 
     }
-
 
 
     function ocultarError() {
 
       const elemento =
-        document.getElementById(
-          'error'
-        );
+        document.getElementById('error');
 
 
-      elemento.style.display =
-        'none';
+      if (!elemento) {
+        return;
+      }
+
+
+      elemento.textContent = '';
+
+      elemento.style.display = 'none';
 
     }
-
 
 
     /* =====================================================
@@ -633,25 +611,42 @@
     ===================================================== */
 
 
-    function iniciarEscaner() {
+    async function iniciarEscaner() {
 
+
+      /*
+       * Si todavía estamos cerrando
+       * una cámara anterior, esperamos.
+       */
+
+      if (deteniendoCamara) {
+
+        try {
+
+          await deteniendoCamara;
+
+        } catch (error) {
+
+        }
+
+      }
+
+
+      /*
+       * Evitar dos inicializaciones.
+       */
 
       if (iniciandoCamara) {
-
         return;
-
       }
 
 
       if (scanner) {
-
         return;
-
       }
 
 
       iniciandoCamara = true;
-
 
       ocultarError();
 
@@ -662,217 +657,196 @@
 
 
       /*
-       * Crear lector.
+       * Limpiar completamente
+       * el contenedor visual.
        */
 
-      try {
-
-        scanner =
-          new Html5Qrcode(
-            'reader'
-          );
-
-      } catch (error) {
-
-        scanner = null;
-
-        iniciandoCamara = false;
-
-        console.error(error);
+      const reader =
+        document.getElementById('reader');
 
 
-        mostrarError(
-          'No se pudo iniciar el lector QR.'
-        );
+      if (reader) {
 
-
-        actualizarEstado(
-          'Error al iniciar lector.'
-        );
-
-
-        return;
+        reader.innerHTML = '';
 
       }
 
 
-
-      /* =================================================
-         CONFIGURACIÓN
-      ================================================= */
-
-      const configuracion = {
-
-        fps: 10,
+      try {
 
 
-        qrbox: function(
-          viewfinderWidth,
-          viewfinderHeight
-        ) {
+        scanner =
+          new Html5Qrcode('reader');
 
 
-          const tamaño =
-            Math.floor(
-              Math.min(
-                viewfinderWidth,
-                viewfinderHeight
-              ) * 0.70
-            );
+        const configuracion = {
+
+          fps: 10,
+
+          qrbox: function(
+            viewfinderWidth,
+            viewfinderHeight
+          ) {
+
+            const tamaño =
+              Math.floor(
+                Math.min(
+                  viewfinderWidth,
+                  viewfinderHeight
+                ) * 0.70
+              );
 
 
-          return {
+            return {
 
-            width: tamaño,
+              width: tamaño,
 
-            height: tamaño
+              height: tamaño
 
-          };
+            };
 
-        },
-
-
-        aspectRatio: 1.0,
-
-
-        formatsToSupport: [
-
-          Html5QrcodeSupportedFormats.QR_CODE
-
-        ]
-
-      };
-
-
-
-      /* =================================================
-         PRIMER INTENTO
-         CÁMARA TRASERA
-      ================================================= */
-
-      scanner
-        .start(
-
-          {
-            facingMode: {
-              exact: 'environment'
-            }
           },
 
-          configuracion,
+          aspectRatio: 1.0,
 
-          cuandoDetectaQR,
+          formatsToSupport: [
 
-          cuandoNoDetectaQR
+            Html5QrcodeSupportedFormats.QR_CODE
 
-        )
+          ]
 
-
-        .then(function() {
-
-          iniciandoCamara = false;
+        };
 
 
-          actualizarEstado(
-            'Buscando código QR...'
+        /*
+         * Intentar primero cámara trasera.
+         */
+
+        try {
+
+
+          await scanner.start(
+
+            {
+              facingMode: {
+                exact: 'environment'
+              }
+            },
+
+            configuracion,
+
+            cuandoDetectaQR,
+
+            cuandoNoDetectaQR
+
           );
 
-        })
 
-
-        .catch(function(error) {
+        } catch (errorTrasera) {
 
 
           console.warn(
-            'No se pudo iniciar con cámara trasera exacta:',
-            error
+            'Cámara trasera exacta no disponible.',
+            errorTrasera
           );
 
 
           /*
-           * Algunos teléfonos no permiten
-           * "exact: environment".
-           *
-           * Segundo intento:
-           * simplemente environment.
+           * Si falla, detener y limpiar
+           * antes del segundo intento.
            */
 
-          if (scanner) {
-
-            scanner
-              .clear()
-              .catch(function() {});
-
-          }
+          const lectorAnterior =
+            scanner;
 
 
           scanner = null;
 
 
+          try {
+
+            await lectorAnterior.stop();
+
+          } catch (error) {
+
+          }
+
+
+          try {
+
+            lectorAnterior.clear();
+
+          } catch (error) {
+
+          }
+
+
+          /*
+           * Crear nuevamente el lector.
+           */
+
           scanner =
-            new Html5Qrcode(
-              'reader'
-            );
+            new Html5Qrcode('reader');
 
 
-          scanner
-            .start(
+          /*
+           * Segundo intento:
+           * cámara environment normal.
+           */
 
-              {
-                facingMode: 'environment'
-              },
+          await scanner.start(
 
-              configuracion,
+            {
+              facingMode: 'environment'
+            },
 
-              cuandoDetectaQR,
+            configuracion,
 
-              cuandoNoDetectaQR
+            cuandoDetectaQR,
 
-            )
+            cuandoNoDetectaQR
 
+          );
 
-            .then(function() {
-
-              iniciandoCamara = false;
-
-
-              actualizarEstado(
-                'Buscando código QR...'
-              );
-
-            })
+        }
 
 
-            .catch(function(errorFinal) {
-
-              iniciandoCamara = false;
+        iniciandoCamara = false;
 
 
-              console.error(
-                errorFinal
-              );
+        actualizarEstado(
+          'Buscando código QR...'
+        );
 
 
-              scanner = null;
+      } catch (errorFinal) {
 
 
-              actualizarEstado(
-                'No se pudo iniciar la cámara.'
-              );
+        console.error(
+          'No se pudo iniciar la cámara:',
+          errorFinal
+        );
 
 
-              mostrarError(
-                'No se pudo acceder a la cámara. ' +
-                'Verifique que el navegador tenga ' +
-                'permiso para utilizar la cámara.'
-              );
+        scanner = null;
 
-            });
+        iniciandoCamara = false;
 
-        });
+
+        actualizarEstado(
+          'No se pudo iniciar la cámara.'
+        );
+
+
+        mostrarError(
+          'No se pudo acceder a la cámara. ' +
+          'Verifique que el navegador tenga permiso ' +
+          'para utilizar la cámara.'
+        );
+
+      }
 
     }
-
 
 
     /* =====================================================
@@ -880,16 +854,14 @@
     ===================================================== */
 
 
-    function cuandoDetectaQR(
+    async function cuandoDetectaQR(
       texto,
       resultado
     ) {
 
 
       if (escaneoRealizado) {
-
         return;
-
       }
 
 
@@ -900,17 +872,13 @@
 
 
       if (!codigo) {
-
         return;
-
       }
 
 
       /*
-       * Marcar inmediatamente.
-       *
-       * Evita que el mismo QR
-       * se procese varias veces.
+       * Bloquear inmediatamente
+       * nuevas lecturas.
        */
 
       escaneoRealizado = true;
@@ -926,33 +894,48 @@
 
 
       /*
-       * Mostrar código detectado.
+       * Mostrar código.
        */
 
-      document.getElementById(
-        'codigoDetectado'
-      ).textContent =
-        codigoDetectado;
+      const campoCodigo =
+        document.getElementById(
+          'codigoDetectado'
+        );
+
+
+      if (campoCodigo) {
+
+        campoCodigo.textContent =
+          codigoDetectado;
+
+      }
 
 
       /*
        * Mostrar resultado.
        */
 
-      document.getElementById(
-        'resultado'
-      ).style.display =
-        'block';
+      const resultadoElemento =
+        document.getElementById(
+          'resultado'
+        );
+
+
+      if (resultadoElemento) {
+
+        resultadoElemento.style.display =
+          'block';
+
+      }
 
 
       /*
        * Detener cámara.
        */
 
-      detenerEscaner();
+      await detenerEscaner();
 
     }
-
 
 
     function cuandoNoDetectaQR(error) {
@@ -967,13 +950,25 @@
     }
 
 
-
     /* =====================================================
        DETENER ESCÁNER
     ===================================================== */
 
 
     function detenerEscaner() {
+
+
+      /*
+       * Si ya existe una operación
+       * de cierre, devolver esa misma
+       * promesa.
+       */
+
+      if (deteniendoCamara) {
+
+        return deteniendoCamara;
+
+      }
 
 
       if (!scanner) {
@@ -987,14 +982,29 @@
         scanner;
 
 
-      scanner = null;
+      /*
+       * MUY IMPORTANTE:
+       *
+       * No ponemos scanner = null
+       * antes de terminar el stop().
+       */
+
+      deteniendoCamara =
+        (async function() {
 
 
-      return lector
-        .stop()
+          try {
 
+            await lector.stop();
 
-        .then(function() {
+          } catch (error) {
+
+            console.warn(
+              'Error al detener cámara:',
+              error
+            );
+
+          }
 
 
           try {
@@ -1003,32 +1013,34 @@
 
           } catch (error) {
 
-          }
-
-        })
-
-
-        .catch(function(error) {
-
-
-          console.warn(
-            'Error al detener lector:',
-            error
-          );
-
-
-          try {
-
-            lector.clear();
-
-          } catch (e) {
+            console.warn(
+              'Error al limpiar lector:',
+              error
+            );
 
           }
 
-        });
+
+          /*
+           * Solo ahora liberamos
+           * la referencia.
+           */
+
+          if (scanner === lector) {
+
+            scanner = null;
+
+          }
+
+
+          deteniendoCamara = null;
+
+        })();
+
+
+      return deteniendoCamara;
 
     }
-
 
 
     /* =====================================================
@@ -1036,61 +1048,156 @@
     ===================================================== */
 
 
-    function reiniciarEscaner() {
+    async function reiniciarEscaner() {
+
+
+      const botonOtro =
+        document.getElementById(
+          'btnOtro'
+        );
+
+
+      const botonContinuar =
+        document.getElementById(
+          'btnContinuar'
+        );
+
+
+      /*
+       * Evitar doble pulsación.
+       */
+
+      if (botonOtro) {
+
+        botonOtro.disabled =
+          true;
+
+      }
+
+
+      if (botonContinuar) {
+
+        botonContinuar.disabled =
+          true;
+
+      }
 
 
       /*
        * Ocultar resultado.
        */
 
-      document.getElementById(
-        'resultado'
-      ).style.display =
-        'none';
+      const resultadoElemento =
+        document.getElementById(
+          'resultado'
+        );
+
+
+      if (resultadoElemento) {
+
+        resultadoElemento.style.display =
+          'none';
+
+      }
 
 
       /*
        * Limpiar código.
        */
 
-      document.getElementById(
-        'codigoDetectado'
-      ).textContent =
-        '';
+      const campoCodigo =
+        document.getElementById(
+          'codigoDetectado'
+        );
 
 
-      codigoDetectado =
-        '';
+      if (campoCodigo) {
+
+        campoCodigo.textContent =
+          '';
+
+      }
 
 
-      escaneoRealizado =
-        false;
+      codigoDetectado = '';
+
+      escaneoRealizado = false;
 
 
       ocultarError();
 
 
+      actualizarEstado(
+        'Preparando cámara...'
+      );
+
+
       /*
-       * Limpiar lector.
+       * ESPERAR a que la cámara
+       * anterior termine de cerrarse.
        */
 
-      if (scanner) {
+      await detenerEscaner();
 
-        detenerEscaner()
-          .then(function() {
 
-            iniciarEscaner();
+      /*
+       * Pequeña pausa para que el
+       * navegador libere completamente
+       * el dispositivo de cámara.
+       */
 
-          });
+      await new Promise(
+        function(resolve) {
 
-      } else {
+          setTimeout(
+            resolve,
+            250
+          );
 
-        iniciarEscaner();
+        }
+      );
+
+
+      /*
+       * Limpiar visualmente.
+       */
+
+      const reader =
+        document.getElementById(
+          'reader'
+        );
+
+
+      if (reader) {
+
+        reader.innerHTML = '';
+
+      }
+
+
+      /*
+       * Volver a iniciar.
+       */
+
+      await iniciarEscaner();
+
+
+      if (botonOtro) {
+
+        botonOtro.disabled =
+          false;
+
+      }
+
+
+      if (botonContinuar) {
+
+        botonContinuar.disabled =
+          false;
 
       }
 
     }
-
 
 
     /* =====================================================
@@ -1100,10 +1207,6 @@
 
     function continuar() {
 
-
-      /*
-       * Verificar que exista QR.
-       */
 
       if (!codigoDetectado) {
 
@@ -1124,26 +1227,24 @@
         );
 
 
-      /*
-       * Evitar doble clic.
-       */
+      if (boton) {
 
-      boton.disabled =
-        true;
+        boton.disabled =
+          true;
 
+        boton.textContent =
+          'ABRIENDO...';
 
-      boton.textContent =
-        'ABRIENDO...';
-
-
-      botonOtro.disabled =
-        true;
+      }
 
 
+      if (botonOtro) {
 
-      /* =================================================
-         CODIFICAR QR
-      ================================================= */
+        botonOtro.disabled =
+          true;
+
+      }
+
 
       const codigo =
         encodeURIComponent(
@@ -1151,22 +1252,10 @@
         );
 
 
-
-      /* =================================================
-         CONSTRUIR URL
-      =================================================
-
-         Apps Script recibirá:
-
-         ?codigoQR=00115COL220-02
-
-      ================================================= */
-
       const destino =
         URL_APPS_SCRIPT +
         '?codigoQR=' +
         codigo;
-
 
 
       console.log(
@@ -1181,16 +1270,23 @@
       );
 
 
+      /*
+       * IMPORTANTE:
+       *
+       * Navegación en la MISMA pestaña.
+       *
+       * No usamos:
+       * window.open()
+       *
+       * No usamos:
+       * target="_blank"
+       */
 
-      /* =================================================
-         REDIRECCIÓN
-      ================================================= */
-
-      window.location.href =
-        destino;
+      window.location.assign(
+        destino
+      );
 
     }
-
 
 
     /* =====================================================
@@ -1203,12 +1299,6 @@
       function() {
 
 
-        /*
-         * Pequeño retraso para asegurar
-         * que la librería del lector
-         * terminó de cargar.
-         */
-
         setTimeout(
           function() {
 
@@ -1220,7 +1310,6 @@
 
       }
     );
-
 
 
     /* =====================================================
@@ -1237,7 +1326,6 @@
 
           scanner
             .stop()
-
             .catch(
               function() {}
             );
