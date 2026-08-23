@@ -526,83 +526,6 @@
 
 
     /* =====================================================
-       MODO CIERRE
-    ===================================================== */
-
-    const MODO_CERRAR =
-      new URLSearchParams(
-        window.location.search
-      ).get(
-        'cerrar'
-      ) === '1';
-
-
-    function cerrarVentanaLector() {
-
-
-      const mensaje = {
-        tipo: 'PLANTA_CAMBIOS_GUARDADOS'
-      };
-
-
-      /*
-       * Avisar primero a la pestaña principal, que conserva la
-       * referencia exacta de esta pestaña y puede cerrarla.
-       */
-      try {
-
-        if (
-          window.opener &&
-          !window.opener.closed
-        ) {
-
-          window.opener.postMessage(
-            mensaje,
-            '*'
-          );
-
-        }
-
-      } catch (error) {
-
-      }
-
-
-      /*
-       * Intento directo de cierre. Esta pestaña fue creada mediante
-       * window.open(), por lo que el navegador debe permitir el cierre.
-       */
-      try {
-
-        window.close();
-
-      } catch (error) {
-
-      }
-
-
-      /*
-       * Respaldo para navegadores que necesiten un pequeño retraso.
-       */
-      setTimeout(
-        function() {
-
-          try {
-
-            window.close();
-
-          } catch (error) {
-
-          }
-
-        },
-        250
-      );
-
-    }
-
-
-    /* =====================================================
        CONFIGURACIÓN
     ===================================================== */
 
@@ -691,11 +614,6 @@
     async function iniciarEscaner() {
 
 
-      /*
-       * Si todavía estamos cerrando
-       * una cámara anterior, esperamos.
-       */
-
       if (deteniendoCamara) {
 
         try {
@@ -708,10 +626,6 @@
 
       }
 
-
-      /*
-       * Evitar dos inicializaciones.
-       */
 
       if (iniciandoCamara) {
         return;
@@ -732,11 +646,6 @@
         'Solicitando acceso a la cámara...'
       );
 
-
-      /*
-       * Limpiar completamente
-       * el contenedor visual.
-       */
 
       const reader =
         document.getElementById('reader');
@@ -795,10 +704,6 @@
         };
 
 
-        /*
-         * Intentar primero cámara trasera.
-         */
-
         try {
 
 
@@ -828,11 +733,6 @@
           );
 
 
-          /*
-           * Si falla, detener y limpiar
-           * antes del segundo intento.
-           */
-
           const lectorAnterior =
             scanner;
 
@@ -858,18 +758,9 @@
           }
 
 
-          /*
-           * Crear nuevamente el lector.
-           */
-
           scanner =
             new Html5Qrcode('reader');
 
-
-          /*
-           * Segundo intento:
-           * cámara environment normal.
-           */
 
           await scanner.start(
 
@@ -953,11 +844,6 @@
       }
 
 
-      /*
-       * Bloquear inmediatamente
-       * nuevas lecturas.
-       */
-
       escaneoRealizado = true;
 
 
@@ -969,10 +855,6 @@
         'QR detectado correctamente.'
       );
 
-
-      /*
-       * Mostrar código.
-       */
 
       const campoCodigo =
         document.getElementById(
@@ -988,10 +870,6 @@
       }
 
 
-      /*
-       * Mostrar resultado.
-       */
-
       const resultadoElemento =
         document.getElementById(
           'resultado'
@@ -1006,23 +884,12 @@
       }
 
 
-      /*
-       * Detener cámara.
-       */
-
       await detenerEscaner();
 
     }
 
 
     function cuandoNoDetectaQR(error) {
-
-      /*
-       * No hacemos nada.
-       *
-       * El lector continúa buscando
-       * automáticamente.
-       */
 
     }
 
@@ -1034,12 +901,6 @@
 
     function detenerEscaner() {
 
-
-      /*
-       * Si ya existe una operación
-       * de cierre, devolver esa misma
-       * promesa.
-       */
 
       if (deteniendoCamara) {
 
@@ -1058,13 +919,6 @@
       const lector =
         scanner;
 
-
-      /*
-       * MUY IMPORTANTE:
-       *
-       * No ponemos scanner = null
-       * antes de terminar el stop().
-       */
 
       deteniendoCamara =
         (async function() {
@@ -1097,11 +951,6 @@
 
           }
 
-
-          /*
-           * Solo ahora liberamos
-           * la referencia.
-           */
 
           if (scanner === lector) {
 
@@ -1140,10 +989,6 @@
         );
 
 
-      /*
-       * Evitar doble pulsación.
-       */
-
       if (botonOtro) {
 
         botonOtro.disabled =
@@ -1160,10 +1005,6 @@
       }
 
 
-      /*
-       * Ocultar resultado.
-       */
-
       const resultadoElemento =
         document.getElementById(
           'resultado'
@@ -1177,10 +1018,6 @@
 
       }
 
-
-      /*
-       * Limpiar código.
-       */
 
       const campoCodigo =
         document.getElementById(
@@ -1209,19 +1046,8 @@
       );
 
 
-      /*
-       * ESPERAR a que la cámara
-       * anterior termine de cerrarse.
-       */
-
       await detenerEscaner();
 
-
-      /*
-       * Pequeña pausa para que el
-       * navegador libere completamente
-       * el dispositivo de cámara.
-       */
 
       await new Promise(
         function(resolve) {
@@ -1235,10 +1061,6 @@
       );
 
 
-      /*
-       * Limpiar visualmente.
-       */
-
       const reader =
         document.getElementById(
           'reader'
@@ -1251,10 +1073,6 @@
 
       }
 
-
-      /*
-       * Volver a iniciar.
-       */
 
       await iniciarEscaner();
 
@@ -1374,21 +1192,6 @@
     window.addEventListener(
       'load',
       function() {
-
-
-        /*
-         * Si esta página fue abierta con ?cerrar=1, NO iniciamos
-         * la cámara. Solo avisamos a la pestaña principal y cerramos
-         * inmediatamente esta pestaña secundaria.
-         */
-        if (MODO_CERRAR) {
-
-          cerrarVentanaLector();
-
-          return;
-
-        }
-
 
         setTimeout(
           function() {
